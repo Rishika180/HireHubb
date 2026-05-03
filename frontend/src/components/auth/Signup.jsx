@@ -33,8 +33,12 @@ const Signup = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    console.log("Signup clicked");
 
-    console.log("FORM SUBMITTED"); // debug
+    if (!input.fullname || !input.email || !input.phoneNumber || !input.password || !input.role) {
+        toast.error("Please fill all fields");
+        return;
+    }
 
     const formData = new FormData();
     formData.append("fullname", input.fullname);
@@ -44,35 +48,41 @@ const Signup = () => {
     formData.append("role", input.role);
 
     if (input.file) {
-      formData.append("file", input.file);
+        formData.append("file", input.file);
     }
 
     try {
-      dispatch(setLoading(true));
+        dispatch(setLoading(true));
 
-      const res = await axios.post(
-        `${USER_API_END_POINT}/register`,
-        formData
-      );
+        const res = await axios.post(
+            `${USER_API_END_POINT}/register`,
+            formData,
+            {
+                timeout: 15000,
+                withCredentials: false,
+            }
+        );
 
-      if (res.data.success) {
-        toast.success(res.data.message);
-        navigate("/login");
-      }
+        if (res.data.success) {
+            toast.success(res.data.message);
+            navigate("/login");
+        }
 
     } catch (error) {
-      console.log(error);
-      toast.error(error?.response?.data?.message || "Something went wrong");
+        console.log(error);
+         dispatch(setLoading(false));
+        toast.error(error?.response?.data?.message || "Something went wrong");
     } finally {
-      dispatch(setLoading(false));
+        dispatch(setLoading(false));
     }
-  };
+};
 
   useEffect(() => {
+    dispatch(setLoading(false));
     if (user) {
       navigate("/");
     }
-  }, []);
+  }, [user]);
 
   return (
     <div>
