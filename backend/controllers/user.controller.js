@@ -19,7 +19,7 @@ export const register = async (req, res) => {
         // ✅ SAFE FILE HANDLING
         let profilePhoto = "";
 
-        if (req.file) {
+        if (req.file && req.file.buffer) {
             const fileUri = getDataUri(req.file);
             const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
             profilePhoto = cloudResponse.secure_url;
@@ -29,7 +29,7 @@ export const register = async (req, res) => {
         const existingUser = await User.findOne({ email });
         if (existingUser) {
             return res.status(400).json({
-                message: "User already exist with this email.",
+                message: "User already exists",
                 success: false,
             });
         }
@@ -45,17 +45,18 @@ export const register = async (req, res) => {
             password: hashedPassword,
             role,
             profile: {
-                profilePhoto: profilePhoto, // ✅ SAFE VALUE
+                profilePhoto: profilePhoto
             }
         });
 
         return res.status(201).json({
-            message: "Account created successfully.",
+            message: "Account created successfully",
             success: true
         });
 
     } catch (error) {
-        console.log(error);
+        console.log("REGISTER ERROR:", error);
+
         return res.status(500).json({
             message: "Server error",
             success: false
@@ -120,7 +121,7 @@ export const login = async (req, res) => {
                 maxAge: 1 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
                 sameSite: "strict",
-                secure: true   // ⚠️ important for production (Render)
+                secure: true
             })
             .json({
                 message: `Welcome back ${user.fullname}`,
@@ -129,7 +130,8 @@ export const login = async (req, res) => {
             });
 
     } catch (error) {
-        console.log(error);
+        console.log("LOGIN ERROR:", error);
+
         return res.status(500).json({
             message: "Server error",
             success: false
@@ -146,7 +148,8 @@ export const logout = async (req, res) => {
             success: true
         });
     } catch (error) {
-        console.log(error);
+        console.log("LOGOUT ERROR:", error);
+
         return res.status(500).json({
             message: "Server error",
             success: false
@@ -163,7 +166,7 @@ export const updateProfile = async (req, res) => {
         let cloudResponse = null;
 
         // ✅ SAFE FILE HANDLING
-        if (req.file) {
+        if (req.file && req.file.buffer) {
             const fileUri = getDataUri(req.file);
             cloudResponse = await cloudinary.uploader.upload(fileUri.content);
         }
@@ -191,7 +194,7 @@ export const updateProfile = async (req, res) => {
         if (skills) user.profile.skills = skillsArray;
 
         // ✅ SAFE FILE SAVE
-        if (cloudResponse) {
+        if (cloudResponse && req.file) {
             user.profile.resume = cloudResponse.secure_url;
             user.profile.resumeOriginalName = req.file.originalname;
         }
@@ -205,7 +208,8 @@ export const updateProfile = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error);
+        console.log("UPDATE PROFILE ERROR:", error);
+
         return res.status(500).json({
             message: "Server error",
             success: false
