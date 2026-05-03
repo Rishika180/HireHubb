@@ -20,7 +20,7 @@ const Signup = () => {
         phoneNumber: "",
         password: "",
         role: "",
-        file: ""
+        file: null
     });
     const {loading,user} = useSelector(store=>store.auth);
     const dispatch = useDispatch();
@@ -41,7 +41,7 @@ const Signup = () => {
         formData.append("password", input.password);
         formData.append("role", input.role);
         if (input.file) {
-            formData.append("file", input.file);
+            formData.append("profile", input.file);
         }
 
         try {
@@ -56,7 +56,8 @@ const Signup = () => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+        
+            toast.error(error?.response?.data?.message || "Something went wrong");
         } finally{
             dispatch(setLoading(false));
         }
