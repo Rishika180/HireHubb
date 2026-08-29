@@ -1,7 +1,8 @@
 # HireHubb – Smart Job Hiring Platform
 
 HireHubb is a full-stack MERN Job Portal platform where students can explore and apply for jobs, and recruiters can post and manage job listings.
- Features:-
+ # Features:-
+ 
  Student
  
 User Authentication (Signup/Login)
@@ -19,7 +20,7 @@ View Applicants
 Manage Job Listings
 
  
-Tech Stack
+# Tech Stack
 
  Frontend:-
    
