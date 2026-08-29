@@ -1,9 +1,8 @@
-🚀 HireHubb – Smart Job Hiring Platform
+# HireHubb – Smart Job Hiring Platform
 
 HireHubb is a full-stack MERN Job Portal platform where students can explore and apply for jobs, and recruiters can post and manage job listings.
-
-🌟 Features
-👨‍🎓 Student
+ Features:-
+* Student
 User Authentication (Signup/Login)
 Browse Jobs
 Search Jobs
@@ -11,15 +10,15 @@ Apply for Jobs
 Update Profile
 View Applied Jobs
 
-🧑‍💼 Recruiter
+* Recruiter
 
 Create Company Profile
 Post New Jobs
 View Applicants
 Manage Job Listings
 
-🛠 Tech Stack
-🔹 Frontend:-
+* Tech Stack
+1. Frontend:-
 React.js
 Vite
 Tailwind CSS
@@ -27,18 +26,19 @@ Redux Toolkit
 Axios
 React Router DOM
 
-🔹 Backend:-
+2. Backend:-
 
 Node.js
 Express.js
 MongoDB (Atlas)
 Mongoose
 
-JWT Authentication
+# JWT Authentication
 Bcrypt
 Multer (File Upload)
 
-📂 Project Structure
+ 
+ # Project Structure
 HireHubb
 │
 ├── backend
