@@ -61,6 +61,13 @@ export const getCompanyById = async (req, res) => {
                 success: false
             })
         }
+        // ownership check: only the recruiter who registered it can view it
+        if (company.userId.toString() !== req.id) {
+            return res.status(403).json({
+                message: "You are not allowed to access this company.",
+                success: false
+            })
+        }
         return res.status(200).json({
             company,
             success: true
@@ -72,6 +79,21 @@ export const getCompanyById = async (req, res) => {
 export const updateCompany = async (req, res) => {
     try {
         const { name, description, website, location } = req.body;
+
+        // ownership check: only the recruiter who registered it can update it
+        const existingCompany = await Company.findById(req.params.id);
+        if (!existingCompany) {
+            return res.status(404).json({
+                message: "Company not found.",
+                success: false
+            })
+        }
+        if (existingCompany.userId.toString() !== req.id) {
+            return res.status(403).json({
+                message: "You are not allowed to access this company.",
+                success: false
+            })
+        }
  
         const file = req.file;
         // idhar cloudinary ayega

@@ -1,4 +1,5 @@
 import { Job } from "../models/job.model.js";
+import { Company } from "../models/company.model.js";
 
 // admin post krega job
 export const postJob = async (req, res) => {
@@ -12,6 +13,14 @@ export const postJob = async (req, res) => {
                 success: false
             })
         };
+        // ownership check: recruiter can only post jobs for their own company
+        const company = await Company.findOne({ _id: companyId, userId });
+        if (!company) {
+            return res.status(403).json({
+                message: "You can only post jobs for your own company.",
+                success: false
+            })
+        }
         const job = await Job.create({
             title,
             description,

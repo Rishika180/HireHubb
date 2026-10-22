@@ -87,6 +87,13 @@ export const getApplicants = async (req,res) => {
                 success:false
             })
         };
+        // ownership check: only the recruiter who posted the job sees its applicants
+        if (job.created_by.toString() !== req.id) {
+            return res.status(403).json({
+                message:'You are not allowed to view applicants for this job.',
+                success:false
+            })
+        };
         return res.status(200).json({
             job, 
             succees:true
@@ -111,6 +118,15 @@ export const updateStatus = async (req,res) => {
         if(!application){
             return res.status(404).json({
                 message:"Application not found.",
+                success:false
+            })
+        };
+
+        // ownership check: only the recruiter who posted the job can update status
+        const job = await Job.findById(application.job);
+        if (!job || job.created_by.toString() !== req.id) {
+            return res.status(403).json({
+                message:"You are not allowed to update this application.",
                 success:false
             })
         };
