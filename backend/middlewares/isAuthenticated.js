@@ -20,9 +20,9 @@ const isAuthenticated = async (req, res, next) => {
         next();
     } catch (error) {
         console.log(error);
-        return res.status(401).json({
-            message: "Invalid or expired token",
-            success: false
+         return res.status(401).json({
+            message: "Token expired or invalid, please login again",
+            success: false,
         });
     }
 }
