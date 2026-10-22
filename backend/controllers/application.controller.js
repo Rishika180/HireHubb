@@ -43,6 +43,10 @@ export const applyJob = async (req, res) => {
         })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: "Server error",
+            success: false
+        });
     }
 };
 export const getAppliedJobs = async (req,res) => {
@@ -68,6 +72,10 @@ export const getAppliedJobs = async (req,res) => {
         })
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: "Server error",
+            success: false
+        });
     }
 }
 // admin dekhega kitna user ne apply kiya hai
@@ -100,6 +108,10 @@ export const getApplicants = async (req,res) => {
         });
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: "Server error",
+            success: false
+        });
     }
 }
 export const updateStatus = async (req,res) => {
@@ -109,6 +121,14 @@ export const updateStatus = async (req,res) => {
         if(!status){
             return res.status(400).json({
                 message:'status is required',
+                success:false
+            })
+        };
+
+        const allowedStatus = ['pending', 'accepted', 'rejected'];
+        if (!allowedStatus.includes(String(status).toLowerCase())) {
+            return res.status(400).json({
+                message:'Invalid status. Use pending, accepted or rejected.',
                 success:false
             })
         };
@@ -142,5 +162,9 @@ export const updateStatus = async (req,res) => {
 
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            message: "Server error",
+            success: false
+        });
     }
 }
