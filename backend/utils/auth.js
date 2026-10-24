@@ -5,11 +5,11 @@ export const getJwtSecret = () => process.env.SECRET_KEY || process.env.JWT_SECR
 
 const isProduction = () => process.env.NODE_ENV === "production" || Boolean(process.env.RENDER);
 
-// Frontend (Vercel) and backend (Render) are on different sites, so the cookie must be
-// SameSite=None; Secure to be sent cross-site. Locally (http://localhost) that combination is
-// rejected, so fall back to Lax.
+// The frontend calls the API through the Vercel proxy (/api -> Render), so the browser sees
+// one site. A first-party SameSite=Lax httpOnly cookie works in every browser and also
+// protects against CSRF. Secure (HTTPS-only) is enabled in production.
 export const cookieOptions = () => ({
     httpOnly: true,
     secure: isProduction(),
-    sameSite: isProduction() ? "none" : "lax",
+    sameSite: "lax",
 });
