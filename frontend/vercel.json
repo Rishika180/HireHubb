@@ -1,5 +1,12 @@
 {
   "rewrites": [
+    { "source": "/api/:path*", "destination": "https://hirehubb.onrender.com/api/:path*" },
     { "source": "/(.*)", "destination": "/" }
+  ],
+  "headers": [
+    {
+      "source": "/api/:path*",
+      "headers": [{ "key": "x-vercel-enable-rewrite-caching", "value": "0" }]
+    }
   ]
 }
