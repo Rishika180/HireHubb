@@ -32,15 +32,15 @@ const Navbar = () => {
     }
     return (
         <div className='bg-white'>
-            <div className='flex items-center justify-between mx-auto max-w-7xl h-16'>
+            <div className='flex flex-col sm:flex-row items-center justify-between gap-2 mx-auto max-w-7xl px-4 py-2 sm:py-0 sm:h-16'>
                 <div>
-                   <h1 className="text-2xl font-bold">
+                   <h1 className="text-xl sm:text-2xl font-bold">
   Hire<span className="text-purple-600">Hub</span>
 </h1>
 
                 </div>
-                <div className='flex items-center gap-12'>
-                    <ul className='flex font-medium items-center gap-5'>
+                <div className='flex items-center justify-between w-full sm:w-auto gap-4 md:gap-12'>
+                    <ul className='flex font-medium items-center gap-3 sm:gap-5 text-sm sm:text-base'>
                         {
                             user && user.role === 'recruiter' ? (
                                 <>
@@ -61,8 +61,8 @@ const Navbar = () => {
                     {
                         !user ? (
                             <div className='flex items-center gap-2'>
-                                <Link to="/login"><Button variant="outline">Login</Button></Link>
-                                <Link to="/signup"><Button className="bg-[#6A38C2] hover:bg-[#5b30a6]">Signup</Button></Link>
+                                <Link to="/login"><Button variant="outline" className="h-9 px-3 sm:h-10 sm:px-4">Login</Button></Link>
+                                <Link to="/signup"><Button className="h-9 px-3 sm:h-10 sm:px-4 bg-[#6A38C2] hover:bg-[#5b30a6]">Signup</Button></Link>
                             </div>
                         ) : (
                             <Popover>
@@ -71,7 +71,7 @@ const Navbar = () => {
                                         <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
                                     </Avatar>
                                 </PopoverTrigger>
-                                <PopoverContent className="w-80">
+                                <PopoverContent className="w-80 max-w-[calc(100vw-2rem)]">
                                     <div className=''>
                                         <div className='flex gap-2 space-y-2'>
                                             <Avatar className="cursor-pointer">

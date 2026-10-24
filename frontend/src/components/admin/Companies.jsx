@@ -20,10 +20,10 @@ const Companies = () => {
     return (
         <div>
             <Navbar />
-            <div className='max-w-6xl mx-auto my-10'>
-                <div className='flex items-center justify-between my-5'>
+            <div className='max-w-6xl mx-auto px-4 my-6 sm:my-10'>
+                <div className='flex items-center justify-between gap-3 my-5'>
                     <Input
-                        className="w-fit"
+                        className="w-full max-w-xs"
                         placeholder="Filter by name"
                         onChange={(e) => setInput(e.target.value)}
                     />

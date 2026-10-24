@@ -32,7 +32,7 @@ const FilterCard = () => {
         <div className='w-full bg-white p-3 rounded-md'>
             <h1 className='font-bold text-lg'>Filter Jobs</h1>
             <hr className='mt-3' />
-            <RadioGroup value={selectedValue} onValueChange={changeHandler}>
+            <RadioGroup value={selectedValue} onValueChange={changeHandler} className='grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-x-4'>
                 {
                     fitlerData.map((data, index) => (
                         <div>
