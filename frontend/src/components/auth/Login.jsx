@@ -7,6 +7,7 @@ import { Button } from '../ui/button'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { USER_API_END_POINT } from '@/utils/constant'
+import { setToken } from '@/utils/auth'
 import { toast } from 'sonner'
 import { useDispatch, useSelector } from 'react-redux'
 import { setLoading, setUser } from '@/redux/authSlice'
@@ -35,15 +36,17 @@ const Login = () => {
                     "Content-Type": "application/json"
                 },
                 withCredentials: true,
+                timeout: 60000, // Render free tier can take ~50s to wake up
             });
             if (res.data.success) {
+                setToken(res.data.token);
                 dispatch(setUser(res.data.user));
                 navigate("/");
                 toast.success(res.data.message);
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            toast.error(error?.response?.data?.message || "Unable to reach the server. Please try again.");
         } finally {
             dispatch(setLoading(false));
         }

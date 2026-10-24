@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { USER_API_END_POINT } from '@/utils/constant'
 import { setUser } from '@/redux/authSlice'
+import { setToken } from '@/utils/auth'
 import { toast } from 'sonner'
 
 const Navbar = () => {
@@ -19,13 +20,14 @@ const Navbar = () => {
         try {
             const res = await axios.get(`${USER_API_END_POINT}/logout`, { withCredentials: true });
             if (res.data.success) {
+                setToken(null);
                 dispatch(setUser(null));
                 navigate("/");
                 toast.success(res.data.message);
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            toast.error(error?.response?.data?.message || "Unable to reach the server. Please try again.");
         }
     }
     return (

@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import getDataUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
+import { cookieOptions, getJwtSecret } from "../utils/auth.js";
 
 // ================= REGISTER =================
 export const register = async (req, res) => {
@@ -16,15 +17,6 @@ export const register = async (req, res) => {
             });
         }
 
-        // ✅ SAFE FILE HANDLING
-        let profilePhoto = "";
-
-        if (req.file && req.file.buffer) {
-            const fileUri = getDataUri(req.file);
-            const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-            profilePhoto = cloudResponse.secure_url;
-        }
-
         // ✅ CHECK EXISTING USER
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -32,6 +24,20 @@ export const register = async (req, res) => {
                 message: "User already exists",
                 success: false,
             });
+        }
+
+        // ✅ SAFE FILE HANDLING (profile photo is optional, so an upload failure
+        // must not block account creation)
+        let profilePhoto = "";
+
+        if (req.file && req.file.buffer) {
+            try {
+                const fileUri = getDataUri(req.file);
+                const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+                profilePhoto = cloudResponse.secure_url;
+            } catch (uploadError) {
+                console.log("PROFILE PHOTO UPLOAD ERROR:", uploadError);
+            }
         }
 
         // ✅ HASH PASSWORD
@@ -104,7 +110,7 @@ export const login = async (req, res) => {
             userId: user._id
         };
 
-        const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: "1d" });
+        const token = jwt.sign(tokenData, getJwtSecret(), { expiresIn: "1d" });
 
         user = {
             _id: user._id,
@@ -118,14 +124,13 @@ export const login = async (req, res) => {
         return res
             .status(200)
             .cookie("token", token, {
+                ...cookieOptions(),
                 maxAge: 1 * 24 * 60 * 60 * 1000,
-                httpOnly: true,
-                sameSite: "strict",
-                secure: true
             })
             .json({
                 message: `Welcome back ${user.fullname}`,
                 user,
+                token,
                 success: true
             });
 
@@ -143,7 +148,7 @@ export const login = async (req, res) => {
 // ================= LOGOUT =================
 export const logout = async (req, res) => {
     try {
-        return res.status(200).cookie("token", "", { maxAge: 0 }).json({
+        return res.status(200).cookie("token", "", { ...cookieOptions(), maxAge: 0 }).json({
             message: "Logged out successfully.",
             success: true
         });

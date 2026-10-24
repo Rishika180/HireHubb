@@ -8,6 +8,10 @@ import store from './redux/store.js'
 import { persistStore } from 'redux-persist'
 import { PersistGate } from 'redux-persist/integration/react'
 
+import { setupAxiosAuth } from './utils/auth.js'
+
+setupAxiosAuth();
+
 const persistor = persistStore(store);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
